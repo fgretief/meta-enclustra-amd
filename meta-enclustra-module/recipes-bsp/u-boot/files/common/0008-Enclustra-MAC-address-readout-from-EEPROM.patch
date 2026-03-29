@@ -27,7 +27,7 @@ index 7eb38c3e949..abcd07d7884 100644
 @@ -83,6 +83,14 @@ config GATEWORKS_SC
  	  boards to provide a boot watchdog, power control, temperature monitor,
  	  voltage ADCs, and EEPROM.
- 
+
 +config ENCLUSTRA_EEPROM_MAC
 +	bool "Configure Enclustra MAC address"
 +	depends on MISC
@@ -56,8 +56,7 @@ new file mode 100644
 index 00000000000..60ba09a0be7
 --- /dev/null
 +++ b/drivers/misc/eeprom-mac.c
-@@ -0,0 +1,96 @@
-+#include <common.h>
+@@ -0,0 +1,95 @@
 +#include <linux/compat.h>
 +#include <dm.h>
 +#include <i2c.h>
@@ -173,6 +172,6 @@ index 00000000000..2f937bd3f0f
 +
 +int ds28_get_mac(u8 *buffer);
 +int atsha204_get_mac(u8 *buffer);
--- 
+--
 2.34.1
 

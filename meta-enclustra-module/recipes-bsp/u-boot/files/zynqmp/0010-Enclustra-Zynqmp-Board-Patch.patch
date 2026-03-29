@@ -51,8 +51,8 @@ index 0000000000..b5319e8b53
 + * (C) Copyright 2020 Enclustra GmbH
 + */
 +
-+#include <common.h>
 +#include <env.h>
++#include <linux/kernel.h>
 +#include <enclustra/eeprom-mac.h>
 +
 +#define ENCLUSTRA_MAC               0xF7B020
@@ -72,7 +72,7 @@ index 0000000000..b5319e8b53
 +	u32 hwaddr_h;
 +	char hwaddr_str[18];
 +	bool hwaddr_set = false;
-+	
++
 +#if defined(CONFIG_ENCLUSTRA_EEPROM_MAC)
 +
 +	if (!env_get("ethaddr")) {
@@ -145,10 +145,10 @@ index 9ab50eca40..c75128a448 100644
 +++ b/board/xilinx/zynqmp/Makefile
 @@ -4,6 +4,7 @@
  # Michal Simek <michal.simek@amd.com>
- 
+
  obj-y	:= zynqmp.o
 +obj-y	+= ../common/enclustra.o
- 
+
  ifneq ($(CONFIG_XILINX_PS_INIT_FILE),"")
  PS_INIT_FILE := $(shell cd $(srctree); readlink -f $(CONFIG_XILINX_PS_INIT_FILE))
 diff --git a/common/board_r.c b/common/board_r.c
@@ -165,9 +165,9 @@ index a7967849dc..8527bb015b 100644
 +#ifdef CONFIG_ENCLUSTRA_EEPROM_MAC
 +	enclustra_common,
 +#endif
- #if defined(CONFIG_SCSI) && !defined(CONFIG_DM_SCSI)
- 	INIT_FUNC_WATCHDOG_RESET
- 	initr_scsi,
+ #ifdef CONFIG_BITBANGMII
+ 	bb_miiphy_init,
+ #endif
 diff --git a/include/init.h b/include/init.h
 index d57a24fd00..8525883cb1 100644
 --- a/include/init.h
@@ -180,7 +180,7 @@ index d57a24fd00..8525883cb1 100644
 +int enclustra_common(void);
  int board_postclk_init(void); /* after clocks/timebase, before env/serial */
  int board_early_init_r(void);
- 
--- 
+
+--
 2.34.1
 

@@ -113,13 +113,13 @@ sudo apt-get install libtinfo5
 1. Use the repo tool to setup all required layers and repositories using the [AMD yocto manifests repository](https://github.com/Xilinx/yocto-manifests/) in your workspace:
 
 ```bash
-repo init -u "https://github.com/Xilinx/yocto-manifests.git" -b "rel-v2024.2"
+repo init -u "https://github.com/Xilinx/yocto-manifests.git" -b "rel-v2025.2"
 repo sync
 ```
 
 2. Clone this repository:
 ```bash
-git clone https://github.com/enclustra/meta-enclustra-amd.git -b "xlnx-2024.2"
+git clone https://github.com/enclustra/meta-enclustra-amd.git -b "xlnx-2025.2"
 ```
 
 The expected workspace folder structure is given below:
@@ -172,7 +172,7 @@ bitbake-layers add-layer ../meta-enclustra-amd/meta-enclustra-refdes
 ```
 The layers should be added to `conf/bblayers.conf`:
 ```bash
-tail conf/bblayers.conf 
+tail conf/bblayers.conf
     /ws/sources/poky/../meta-jupyter \
     /ws/sources/poky/../meta-rauc \
     /ws/sources/poky/../meta-system-controller \
@@ -185,7 +185,7 @@ tail conf/bblayers.conf
     "
 ```
 
-5. The reference design relies on the [gen-machineconf tool](https://github.com/Xilinx/gen-machine-conf/tree/xlnx-rel-v2024.2) provided by the [meta-xilinx repository](https://github.com/Xilinx/meta-xilinx/tree/xlnx-rel-v2024.2) to generate the machine config.
+5. The reference design relies on the [gen-machineconf tool](https://github.com/Xilinx/gen-machine-conf/tree/xilinx_v2025.2) provided by the [meta-xilinx repository](https://github.com/Xilinx/meta-xilinx/tree/xlnx-rel-v2025.2) to generate the machine config.
 
 This tool takes an XSA exported from Vivado as input and generates a machine config that can be used in the yocto project as the target **MACHINE**.
 
@@ -223,7 +223,7 @@ MACHINE = "refdes-xu5-pe1-xczu2cg"
 
 6. Add the generated **MACHINE** to `conf/local.conf`:
 ```bash
-tail conf/local.conf 
+tail conf/local.conf
 SKIP_META_XILINX_STANDALONE_SANITY_CHECK = "1"
 SKIP_META_XILINX_STANDALONE_SDT_SANITY_CHECK = "1"
 SKIP_META_XILINX_TOOLS_SANITY_CHECK = "1"
@@ -441,7 +441,7 @@ Zynq> nand read 0x3000000 nand-linux 0x2000000
      33554432 bytes read: OK
 ```
 
-5. Boot into the loaded image in RAM.  
+5. Boot into the loaded image in RAM.
 
 ```shell
 Zynq> bootm 0x3000000

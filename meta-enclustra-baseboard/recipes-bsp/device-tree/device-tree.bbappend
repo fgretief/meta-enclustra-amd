@@ -21,77 +21,80 @@ DEFAULT_BOOTARGS:append:enclustra-qspi = " root=/dev/ram0 rw"
 
 ## append SOM dtsi
 do_configure:prepend:xu1-module() {
-    echo "#include \"zynqmp_enclustra_mercury_xu1.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynqmp_enclustra_mercury_xu1.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:xu3-module() {
-    echo "#include \"zynqmp_enclustra_mars_xu3.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynqmp_enclustra_mars_xu3.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:xu5-module() {
-    echo "#include \"zynqmp_enclustra_mercury_xu5.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynqmp_enclustra_mercury_xu5.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:xu6-module() {
-    echo "#include \"zynqmp_enclustra_mercury_xu6.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynqmp_enclustra_mercury_xu6.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:xu61-module() {
-    echo "#include \"zynqmp_enclustra_mercury_xu61.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynqmp_enclustra_mercury_xu61.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:xu7-module() {
-    echo "#include \"zynqmp_enclustra_mercury_xu7.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynqmp_enclustra_mercury_xu7.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:xu8-module() {
-    echo "#include \"zynqmp_enclustra_mercury_xu8.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynqmp_enclustra_mercury_xu8.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:xu9-module() {
-    echo "#include \"zynqmp_enclustra_mercury_xu9.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynqmp_enclustra_mercury_xu9.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:xzu65-module() {
-    echo "#include \"zynqmp_enclustra_andromeda_xzu65.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynqmp_enclustra_andromeda_xzu65.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:xzu80-module() {
-    echo "#include \"zynqmp_enclustra_andromeda_xzu80.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynqmp_enclustra_andromeda_xzu80.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:xzu90-module() {
-    echo "#include \"zynqmp_enclustra_andromeda_xzu90.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynqmp_enclustra_andromeda_xzu90.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:zx1-module() {
-    echo "#include \"zynq_enclustra_mercury_zx1.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynq_enclustra_mercury_zx1.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:zx2-module() {
-    echo "#include \"zynq_enclustra_mars_zx2.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynq_enclustra_mars_zx2.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:zx3-module() {
-    echo "#include \"zynq_enclustra_mars_zx3.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynq_enclustra_mars_zx3.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:prepend:zx5-module() {
-    echo "#include \"zynq_enclustra_mercury_zx5.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynq_enclustra_mercury_zx5.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 
 ## baseboard
 do_configure:append:pe1-generic() {
-    echo "#include \"enclustra_mercury_pe1.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"enclustra_mercury_pe1.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:append:pe3-generic() {
-    echo "#include \"enclustra_mercury_pe3.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"enclustra_mercury_pe3.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:append:pe5-generic() {
-    echo "#include \"enclustra_andromeda_pe5.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"enclustra_andromeda_pe5.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:append:st1-generic() {
-    echo "#include \"enclustra_mercury_st1.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"enclustra_mercury_st1.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 do_configure:append:st3-generic() {
-    echo "#include \"enclustra_mars_st3.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"enclustra_mars_st3.dtsi\"" >> ${WORKDIR}/system-user.dtsi
 }
 
-## bootargs
-# depending on the boot mode, the u-boot script adds additional variables, e.g. for the root node
-devicetree_do_compile:prepend() {
-    bootargs = d.getVar('DEFAULT_BOOTARGS')
-    os.system(f"sed -ie '\\|bootargs =|s|.*|             bootargs = \"{bootargs}\";|' device-tree/system-top.dts")
+### bootargs
+## depending on the boot mode, the u-boot script adds additional variables, e.g. for the root node
+do_configure:append() {
+    # If a bootargs variable exists, append it as a valid DTS node
+    if [ -n "${DEFAULT_BOOTARGS}" ]; then
+        cat << EOF >> ${WORKDIR}/system-user.dtsi
 
-    os.system("sed -rie 's@(/include/.*)@// \1@' ../system-user.dtsi")
-
-    f = open('device-tree/system-top.dts', 'a')
-    f.write('#include "system-user.dtsi"')
-    f.close()
+/ {
+    chosen {
+        bootargs = "${DEFAULT_BOOTARGS}";
+    };
+};
+EOF
+    fi
 }
